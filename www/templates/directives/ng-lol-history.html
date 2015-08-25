@@ -1,0 +1,25 @@
+<div>
+
+    <div class="list" ng-repeat="game in recentGames">
+
+        <a class="item item-stable" >
+            <h2 ng-show="game.stats.win" class="pull-left"><span class="balanced">Victory</span></h2>
+            <h2 ng-show="!game.stats.win" class="pull-left"><span class="assertive">Defeat</span></h2>
+            <h4 class="pull-right">{{game.createDate | date:'yyyy-MM-dd HH:mm'}} </h4>
+        </a>
+
+        <a class="item item-avatar " href="#">
+            <img ng-src="{{game.championImg}}">
+            <h2>{{game.champion}}</h2>
+            <p>{{game.subType}}</p>
+            <p>
+                <span class="positive">Kills {{game.stats.championsKilled != null ? game.stats.championsKilled : 0}}</span>
+                <span class="balanced">- Assists {{game.stats.assists != null ? game.stats.assists : 0}}</span>
+                <span class="assertive">- Deaths {{game.stats.assists != null ? game.stats.assists : 0}}</span>
+            </p>
+            <p ng-lol-perso-items></p>
+        </a>
+    </div>
+
+
+</div>

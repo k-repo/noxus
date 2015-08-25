@@ -1,0 +1,41 @@
+<ion-view view-title="Summoner search">
+    <ion-content>
+        <div class="im-wrapper">
+
+            <!-- Search form -->
+            <ng-lol-search></ng-lol-search>
+
+            <br>
+
+            <!-- ERROR MSG -->
+            <div class="card" ng-show="notFound">
+                <div class="item item-text-wrap">
+                    This Account dosn't exist !
+                </div>
+            </div>
+
+            <!-- INFO PERSO -->
+            <ng-lol-perso></ng-lol-perso>
+
+
+            <!-- INFO HISTORY -->
+            <ng-lol-history></ng-lol-history>
+
+
+            <ng-lol-current></ng-lol-current>
+
+
+
+        </div>
+
+
+    </ion-content>
+
+    <button ng-show="summonerInfo" ng-click="getCurrent()" id="current-game-lol" class="button button-positive button-fab button-fab-bottom-left">
+        <i class="icon ion-ios-game-controller-b-outline"></i>
+    </button>
+
+    <button ng-show="summonerInfo" ng-click="getHistory()" id="history-lol" class="button button-positive button-fab button-fab-bottom-right">
+        <i class="icon ion-ios-list-outline"></i>
+    </button>
+</ion-view>

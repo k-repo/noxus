@@ -1,0 +1,15 @@
+<div ng-show="summonerInfo">
+    <div class="list card stable-bg">
+        <a class="item item-avatar">
+            <img ng-src="http://avatar.leagueoflegends.com/summonerId/euw/{{summonerInfo.id}}.png">
+            <h2>{{ summonerInfo.name }}</h2>
+            <p>Level : {{ summonerInfo.summonerLevel }}</p>
+            <p>{{leagueInfo.tier}} {{leagueInfo.entries[0].division}}</p>
+            <p>{{leagueInfo.entries[0].wins}} wins</p>
+            <p>{{leagueInfo.entries[0].losses}} losses</p>
+        </a>
+        <div class="item item-divider">
+            Last game : {{ summonerInfo.revisionDate | date:'yyyy-MM-dd HH:mm' }}
+        </div>
+    </div>
+</div>

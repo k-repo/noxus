@@ -1,0 +1,45 @@
+
+<div ng-show="noCurrentGame">
+    <div class="bar bar-dark">
+        <div class="h1 title title-left fab-left">No Current game</div>
+    </div>
+</div>
+
+<div ng-show="currentGame">
+    <div class="bar bar-dark">
+        <div class="h1 title title-left fab-left"> Current Game</div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="button-bar">
+        <a class="button button-positive">{{currentGame.gameMode}}</a>
+        <a class="button button-positive">{{currentGame.gameType}}</a>
+        <a class="button button-positive">{{currentGame.gameStartTime | date:'yyyy-MM-dd HH:mm'}}</a>
+    </div>
+    <br>
+    <div class="bar bar-positive">
+        <div class="h1 title title-left fab-left"> Blue Team</div>
+    </div>
+    <br>
+    <div class="list list-inset " >
+        <div ng-show="participant.teamId === 100" class="item item-avatar" ng-repeat="participant in currentGame.participants">
+            <img ng-src="{{participant.championImg}}">
+            <p>{{participant.summonerName}}</p>
+            <p>{{participant.champion}}</p>
+        </div>
+    </div>
+
+
+    <div class="bar bar-assertive">
+        <div class="h1 title title-left fab-left"> Red Team</div>
+    </div>
+    <br>
+    <div class="list list-inset">
+        <div ng-show="participant.teamId === 200" class="item item-avatar" ng-repeat="participant in currentGame.participants">
+                <img ng-src="{{participant.championImg}}">
+                <p>{{participant.summonerName}}</p>
+                <p>{{participant.champion}}</p>
+        </div>
+    </div>
+</div>
