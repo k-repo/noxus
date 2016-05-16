@@ -1,5 +1,5 @@
 angular.module('starter')
-    .controller('LolCtrl', function ($scope, $http, ionicMaterialInk, $ionicLoading, $timeout, ionicMaterialMotion) {
+    .controller('LolCtrl', function ($scope, $http, ionicMaterialInk, $ionicLoading, $timeout, ionicMaterialMotion, localStorageService) {
 
         ionicMaterialInk.displayEffect();
 
@@ -7,14 +7,55 @@ angular.module('starter')
         //
         $scope.notFound = null;
         $scope.noCurrentGame = false;
-        $scope.apiKey = 'c088e234-32a3-4cba-b894-3db265fdb14f';
-        $scope.apiUrl = 'https://euw.api.pvp.net/api/lol/euw/';
+        const apiKey = 'c088e234-32a3-4cba-b894-3db265fdb14f';
+        const staticDataUrl = 'https://global.api.pvp.net/api/lol/static-data/';
+        const staticDataImgUrl = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/';
+        const imgChampUrl = staticDataImgUrl + 'champion/';
+        $scope.imgItemUrl = staticDataImgUrl + 'item/';
+        const apiUrl = 'https://euw.api.pvp.net/api/lol/';
+        const apiKeyUrl = '?api_key=';
+        const entryUrl = '/entry';
+        const leagueVersionUrl = '/v2.5/league/by-summoner/';
+        const summonerByNameUrl = '/v1.4/summoner/by-name/';
+        const championVersionUrl = '/v1.2/champion/';
+        const extentionImg = '.png';
+        $scope.region = 'euw';
+        $scope.friends = localStorageService.keys();
 
+        function clearAll() {
+            return localStorageService.clearAll();
+        }
+
+        $scope.addFriend = function (summoner, friend) {
+            if (friend) {
+                console.log('save');
+                if (localStorageService.isSupported) {
+                    console.log('supp');
+                    if (!localStorageService.get(summoner)){
+                        console.log('set');
+                        localStorageService.set(summoner, summoner);
+                        $scope.friends = localStorageService.keys();
+                        console.log(localStorageService.keys());
+                    }
+                }
+            }
+        };
+
+        $scope.removeFriend = function(friend){
+            if (localStorageService.isSupported) {
+                if (localStorageService.get(summoner)){
+                    console.log('remove');
+                    localStorageService.remove(summoner);
+                    $scope.friends = localStorageService.keys();
+                    console.log(localStorageService.keys());
+                }
+            }
+        };
 
         $scope.getSummoner = function (summoner) {
             $http({
                 method: 'GET',
-                url: $scope.apiUrl + 'v1.4/summoner/by-name/' + summoner + '?api_key=' + $scope.apiKey
+                url: apiUrl + $scope.region + summonerByNameUrl + summoner + apiKeyUrl + apiKey
             })
                 .success(function (data) {
                     //console.log(data);
@@ -28,9 +69,9 @@ angular.module('starter')
                     }, 0);
                     // get league info
                     $http({
-                        method : 'GET',
-                        url : $scope.apiUrl + 'v2.5/league/by-summoner/'+$scope.summonerId+'/entry?api_key=' + $scope.apiKey
-                    }).success(function(data){
+                        method: 'GET',
+                        url: apiUrl + $scope.region + leagueVersionUrl + $scope.summonerId + entryUrl + apiKeyUrl + apiKey
+                    }).success(function (data) {
                         $scope.leagueInfo = {};
                         $scope.leagueInfo = data[Object.keys(data)][0];
                         console.log($scope.leagueInfo);
@@ -48,10 +89,11 @@ angular.module('starter')
         $scope.getRecentGames = function (id) {
             $http({
                 method: 'GET',
-                url: $scope.apiUrl + 'v1.3/game/by-summoner/' + id + '/recent?api_key=' + $scope.apiKey
+                url: apiUrl + $scope.region + '/v1.3/game/by-summoner/' + id + '/recent?api_key=' + apiKey
             })
                 .success(function (data) {
                     //console.log(data);
+                    $scope.recentGames = null;
                     $scope.recentGames = data.games;
                     var i = 0;
                     $scope.recentGames.forEach(function (game) {
@@ -59,13 +101,14 @@ angular.module('starter')
                         $http({
                             method: 'GET',
                             //champion info
-                            url: 'https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/' + championId + '?api_key=' + $scope.apiKey
+                            url: staticDataUrl + $scope.region + championVersionUrl + championId + apiKeyUrl + apiKey
                         })
                             .success(function (data) {
-                                //console.log(data.name);
+                                var index = $scope.recentGames.indexOf(game);
+                                console.log(data);
                                 var champion = data.name;
-                                $scope.recentGames[i].champion = champion;
-                                $scope.recentGames[i].championImg = 'http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/' + champion.replace(/\s+/g, '').replace('\'', '') + '.png';
+                                $scope.recentGames[index].champion = champion;
+                                $scope.recentGames[index].championImg = imgChampUrl + champion.replace(/\s+/g, '').replace('\'', '') + extentionImg;
                                 i++;
                                 $timeout(function () {
                                     ionicMaterialInk.displayEffect();
@@ -75,23 +118,22 @@ angular.module('starter')
                 });
         };
 
-        $scope.getHistory = function(){
+        $scope.getHistory = function () {
             $scope.currentGame = null;
             $scope.noCurrentGame = null;
             $scope.getRecentGames($scope.summonerId);
         }
 
-        $scope.getCurrent = function(){
+        $scope.getCurrent = function () {
             $scope.recentGames = null;
             $scope.getCurrentGame($scope.summonerId);
         }
 
-        $scope.getChampionByID = function(id) {
-
+        $scope.getChampionByID = function (id) {
             $http({
                 method: 'GET',
                 //champion info
-                url: 'https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/' + id + '?api_key=' + $scope.apiKey
+                url: 'https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/' + id + '?api_key=' + apiKey
             })
                 .success(function (data) {
                     data.img = 'http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/' + champion.replace(/\s+/g, '').replace('\'', '') + '.png';
@@ -102,7 +144,7 @@ angular.module('starter')
 
         $scope.getCurrentGame = function (id) {
             $scope.noCurrentGame = false;
-            var url = 'https://euw.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/EUW1/' + id + '?api_key=' + $scope.apiKey;
+            var url = 'https://euw.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/EUW1/' + id + '?api_key=' + apiKey;
             console.log(url);
             $http({
                 method: 'GET',
@@ -118,13 +160,13 @@ angular.module('starter')
                         $http({
                             method: 'GET',
                             //champion info
-                            url: 'https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/' + championId + '?api_key=' + $scope.apiKey
+                            url: staticDataUrl + $scope.region + championVersionUrl + championId + apiKeyUrl + apiKey
                         })
                             .success(function (data) {
                                 console.log(data.name);
                                 var champion = data.name;
                                 participant.champion = champion;
-                                participant.championImg = 'http://ddragon.leagueoflegends.com/cdn/5.2.1/img/champion/' + champion.replace(/\s+/g, '').replace('\'', '') + '.png';
+                                participant.championImg = imgChampUrl + champion.replace(/\s+/g, '').replace('\'', '') + extentionImg;
                                 $timeout(function () {
                                     ionicMaterialInk.displayEffect();
                                 }, 0);
@@ -135,9 +177,6 @@ angular.module('starter')
                     $scope.noCurrentGame = true;
                 });
         };
-
-
-
 
 
         //$scope.loading= function() {

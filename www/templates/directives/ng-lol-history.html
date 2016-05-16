@@ -3,8 +3,8 @@
     <div class="list" ng-repeat="game in recentGames">
 
         <a class="item item-stable" >
-            <h2 ng-show="game.stats.win" class="pull-left"><span class="balanced">Victory</span></h2>
-            <h2 ng-show="!game.stats.win" class="pull-left"><span class="assertive">Defeat</span></h2>
+            <h2 ng-show="game.stats.win" class="pull-left"><span class="balanced">{{game.champion}} Victory</span></h2>
+            <h2 ng-show="!game.stats.win" class="pull-left"><span class="assertive">{{game.champion}} Defeat</span></h2>
             <h4 class="pull-right">{{game.createDate | date:'yyyy-MM-dd HH:mm'}} </h4>
         </a>
 

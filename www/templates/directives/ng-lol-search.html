@@ -1,12 +1,44 @@
 <form name="leagueSearch">
-    <div class="fab-right pull-right">
-        <button class="button button-fab button-balanced icon ion-search"
-                ng-click="getSummoner(summoner); loading()"></button>
+
+    <div class="list">
+        <label class="item item-input item-floating-label">
+            <span class="input-label">Summoner's name</span>
+            <input type="text" placeholder="Summoner's name" name="summoner" ng-model="summoner">
+        </label>
+
+        <br/>
+
+        <div class="item item-checkbox">
+            <label class="checkbox">
+                <input type="checkbox" name="friend" id="friend" ng-model="friend" ng-click="addFriend(summoner,friend)">
+            </label>
+            Add him on friends list
+        </div>
+
+        <br/>
+        <label class="item item-input item-select">
+            <div class="input-label"> Choose region</div>
+            <select id="region" name="region" ng-model="region">
+                <option value="br">Brazil</option>
+                <option value="eune">EU Nordic &amp; East</option>
+                <option selected="selected" value="euw">EU West</option>
+                <option value="jp">Japan</option>
+                <option value="kr">Korea</option>
+                <option value="lan">Latin America North</option>
+                <option value="las">Latin America South</option>
+                <option value="na">North America</option>
+                <option value="oce">Oceania</option>
+                <option value="pbe">Public Beta Environment</option>
+                <option value="ru">Russia</option>
+                <option value="tr">Turkey</option>
+            </select>
+        </label>
+
+        <button class="button button-block button-calm ink icon ion-search" data-ink-color="#9DEAFF" data-ink-opacity="1" ng-click="getSummoner(summoner); loading()">
+            Search
+        </button>
     </div>
-    <label style="width: 80%;" class="item item-input item-floating-label">
-        <span class="input-label">Summoner's name</span>
-        <input style="height: 60%;" type="search" name="summoner" ng-model="summoner" placeholder="Summoner's name">
-    </label>
+
 
 </form>
 
